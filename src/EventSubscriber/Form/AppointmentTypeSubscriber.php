@@ -93,7 +93,9 @@ class AppointmentTypeSubscriber extends Container implements EventSubscriberInte
         $data = $event->getData();
         if ($data->getLawyer()) {
             $em                 = $this->locator->get('doctrine.orm.entity_manager');
-            $lawyerAppointments = $em->getRepository(Appointment::class)->findBy(['lawyer' => $data->getLawyer()->getId()]);
+            $filters = $this->locator->get('doctrine.orm.entity_manager')->getFilters();
+            $filters->disable('user_filter');
+            $lawyerAppointments = $em->getRepository(Appointment::class)->findBy(['lawyer' => $data->getLawyer()]);
             if ($submitedAppointment = $data->getAppointmentDatetimes()) {
                 $lawyerBusyMsg = $this->locator->get('translator')->trans('lawyer_is_busy');
                 $count         = 0;
@@ -108,6 +110,8 @@ class AppointmentTypeSubscriber extends Container implements EventSubscriberInte
                 if ($count > 0) {
                     $form->get('appointmentDatetimes')->addError(new FormError($lawyerBusyMsg));
                 }
+
+                $filters->enable('user_filter');
             }
         }
     }
