@@ -1,0 +1,7 @@
+form:
+  email: 'Имейл'
+  type: 'Имейл'
+  customer: 'Имейл'
+  supplier: 'Имейл'
+  plain_password: 'Имейл'
+  agree_term: 'Имейл'

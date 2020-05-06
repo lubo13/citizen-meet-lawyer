@@ -1,0 +1,44 @@
+{% extends '@EasyAdmin/default/list.html.twig' %}
+
+{% block new_action %}
+    {% if is_granted('ROLE_CITIZEN') == true %}
+        <div class="button-action">
+            <a class="{{ _action.css_class|default('') }}"
+               href="{{ path('easyadmin', _request_parameters|merge({ action: _action.name })) }}"
+               target="{{ _action.target }}">
+                {% if _action.icon %}<i class="fa fa-fw fa-{{ _action.icon }}"></i>{% endif %}
+                {{ _action.label is defined and not _action.label is empty ? _action.label|trans(_trans_parameters) }}
+            </a>
+        </div>
+    {% endif %}
+{% endblock new_action %}
+
+{% block item_actions %}
+    {% set _actions_template = _entity_config.list.collapse_actions
+        ? '@EasyAdmin/default/includes/_actions_dropdown.html.twig'
+        : '@EasyAdmin/default/includes/_actions.html.twig' %}
+    {% if is_granted('ROLE_CITIZEN') == false %}
+        {% set _list_item_actions = {'show': _list_item_actions['show'] } %}
+    {% elseif is_granted('ROLE_CITIZEN') == true %}
+        {% set break = false %}
+        {% for adt in item.appointmentDatetimes %}
+            {% if break == false %}
+                {% if adt.accepted == true %}
+                    {% set _list_item_actions = {'show': _list_item_actions['show'] } %}
+                    {% set break = true %}
+                {% elseif adt.accepted == false %}
+                    {% set _list_item_actions = {'show': _list_item_actions['show'], 'edit': _list_item_actions['edit']} %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {{ include(_actions_template, {
+        actions: _list_item_actions,
+        entity_config: _entity_config,
+        request_parameters: _request_parameters,
+        translation_domain: _entity_config.translation_domain,
+        trans_parameters: _trans_parameters,
+        item_id: _item_id,
+        item: item
+    }, with_context = false) }}
+{% endblock item_actions %}

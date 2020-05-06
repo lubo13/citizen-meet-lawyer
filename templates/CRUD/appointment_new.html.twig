@@ -1,0 +1,26 @@
+{% extends '@EasyAdmin/default/new.html.twig' %}
+
+{% block main %}
+    {% block entity_form %}
+        {{ form_start(form, {'attr' : {'label': false}}) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form) }}
+        </div>
+        <div class="form-group field-collection">
+            {{ form_label(form.lawyer) }}
+            <div class="form-widget">
+                {{ form_errors(form.lawyer) }}
+                {{ form_widget(form.lawyer) }}
+            </div>
+        </div>
+        <div class="form-group field-collection">
+            {{ form_label(form.appointmentDatetimes) }}
+            <div class="form-widget">
+                {{ form_errors(form.appointmentDatetimes) }}
+                {{ form_widget(form.appointmentDatetimes) }}
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+    {% endblock entity_form %}
+{% endblock %}

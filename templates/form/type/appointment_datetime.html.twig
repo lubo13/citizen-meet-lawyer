@@ -1,0 +1,31 @@
+{% block appointment_datetime_widget %}
+    {% if form.children.datetime is defined %}
+        <div class="form-group">
+            {{ form_label(form.datetime) }}
+            <div class="input-group date" id="js-datetimepicker" data-target-input="nearest">
+                {{ form_widget(form.datetime, {'attr': {'class': 'datetimepicker-input', 'data-target': '#js-datetimepicker', 'data-toggle': 'datetimepicker'}}) }}
+                <div class="input-group-append" data-target="#js-datetimepicker" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+            {{ form_help(form.datetime) }}
+            {{ form_errors(form.datetime) }}
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#js-datetimepicker').datetimepicker({
+                    format: 'Y-MM-DD H:mm:ss',
+                    locale: '{{ app.request.locale }}',
+                });
+            });
+        </script>
+    {% endif %}
+    {% if form.children.accepted is defined %}
+        <div class="form-group">
+            {{ form_label(form.accepted) }}
+            {{ form_widget(form.accepted) }}
+            {{ form_help(form.accepted) }}
+            {{ form_errors(form.accepted) }}
+        </div>
+    {% endif %}
+{% endblock %}

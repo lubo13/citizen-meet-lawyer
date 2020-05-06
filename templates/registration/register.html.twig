@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'sing_out'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">{{ 'sing_out'|trans }} / <a href="{{ path('app_login', {'_locale': app.request.attributes.get('_locale')}) }}">{{ 'sing_in'|trans }}</a></h1>
+
+    <div class="">
+        {{ form_start(registrationForm) }}
+        {{ form_errors(registrationForm) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.type) }}
+        {{ form_row(registrationForm.plainPassword) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button class="btn btn-primary">{{ 'form.btn_register'|trans }}</button>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

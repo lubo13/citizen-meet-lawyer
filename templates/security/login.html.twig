@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'sing_in'|trans }}{% endblock %}
+
+{% block body %}
+    <div>
+        <form method="post">
+            <h1 class="text-center">{{ 'sing_in'|trans }} / <a
+                        href="{{ path('app_register', {'_locale': app.request.attributes.get('_locale')}) }}">{{ 'sing_out'|trans }}</a>
+            </h1>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+            {% if app.user %}
+                <div class="mb-3">
+                    You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                </div>
+            {% endif %}
+
+
+            <label for="inputEmail">Email</label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required
+                   autofocus>
+            <label for="inputPassword">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" required>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="_remember_me"> {{ 'form.remember_me'|trans }}
+                </label>
+            </div>
+
+            <button class="btn btn-lg btn-primary" type="submit">
+                {{ 'form.btn_sing_in'|trans }}
+            </button>
+        </form>
+    </div>
+{% endblock %}

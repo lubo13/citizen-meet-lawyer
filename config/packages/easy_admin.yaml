@@ -1,0 +1,44 @@
+easy_admin:
+  site_name: 'Meet lawyer'
+  design:
+    menu:
+      - { entity: 'Appointment', permission: 'ROLE_USER'}
+      - { entity: 'AppointmentDatetime', permission: 'ROLE_ADMIN' }
+    templates:
+      layout: 'easyadmin/layout.html.twig'
+    form_theme: ['form/type/appointment_datetime.html.twig', 'form/bootstrap_4.html.twig']
+    assets:
+      css:
+        - 'css/font-awesome.min.css'
+        - 'css/tempusdominus-bootstrap-4.min.css'
+      js:
+        - 'js/moment.min.js'
+        - 'js/tempusdominus-datetimepicker-4.min.js'
+        - 'js/jquery.are-you-sure.min.js'
+  entities:
+    Appointment:
+      class: App\Entity\Appointment
+      controller: App\Controller\AppointmentAdminController
+      search:
+        fields: ['citizen.email', 'lawyer.email', 'id', 'appointmentDatetimes.datetime', 'createdAt']
+      list:
+        fields: [id, appointmentDatetimes, citizen, lawyer, createdAt]
+        actions: ['show']
+        filters:
+          - { property: 'citizen', class: App\Entity\User }
+          - { property: 'lawyer', class: App\Entity\User }
+          - { property: 'appointmentDatetimes', class: App\Entity\AppointmentDatetime }
+      show:
+        fields:
+          - { property: 'citizen' }
+          - { property: 'lawyer' }
+          - { property: 'appointmentDatetimes', template: 'field/appointment_datetimes.html.twig' }
+          - { property: 'createdAt' }
+
+    AppointmentDatetime:
+      class: App\Entity\AppointmentDatetime
+      disabled_actions: ['show']
+      edit:
+        fields:
+          - { property: 'accepted', dataType: 'toggle'}
+      list: ['accepted']

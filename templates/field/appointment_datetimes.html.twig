@@ -1,0 +1,71 @@
+{# a *-to-many collection of values #}
+{% if value is iterable %}
+    {% if 'show' == view %}
+        {% if value|length > 0 %}
+            <table class="table text-center">
+                <thead>
+                <tr>
+                    <th scope="col" style="width:  50%">{{ 'datetime'|trans }}</th>
+                    <th scope="col" style="width:  50%">{{ 'accepted'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <p id="set-points-error"></p>
+                {% for item in value|slice(0, entity_config.show.max_results) %}
+                    <tr>
+                        <td>{{ item.datetime|date("Y/m/d H:i:s") }}</td>
+                        <td>
+                            {% if item.accepted is not null %}
+                                {% if item.accepted == 0 %}
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                {% else %}
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                {% endif %}
+                            {% elseif is_granted('ROLE_CITIZEN') %}
+                                {{ 'in_progress'|trans }}
+                            {% else %}
+                                {% set url =  url('easyadmin', {'entity': 'AppointmentDatetime', 'action': 'edit', 'property': 'accepted', 'id': item.id, 'newValue': 'true' }) %}
+                                <button class="btn-acceptance btn btn-success" data-url="{{ url }}">
+                                    {{ 'accept'|trans }}
+                                </button>
+                                {% set url = url('easyadmin', {'entity': 'AppointmentDatetime', 'action': 'edit', 'property': 'accepted', 'id': item.id, 'newValue': 'false' }) %}
+                                <button class="btn-acceptance btn btn-danger" data-url="{{ url }}">
+                                    {{ 'decline'|trans }}
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty collection-empty">
+                {{ include(entity_config.templates.label_empty) }}
+            </div>
+        {% endif %}
+    {% elseif 'list' == view %}
+        <span class="badge badge-secondary">{{ value|length }}</span>
+    {% endif %}
+    {# a simple *-to-one value associated with an entity managed by this backend #}
+{% elseif link_parameters is defined %}
+    <a href="{{ path('easyadmin', link_parameters|merge({ referer: '' })) }}">{{ value|easyadmin_truncate }}</a>
+{% else %}
+    {{ value|easyadmin_truncate }}
+{% endif %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".btn-acceptance").click(function () {
+            var url = $(this).data('url');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    $("#set-points-error").html(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
