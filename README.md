@@ -39,7 +39,7 @@ exact hour of the appointment;
 6. Login with citizen and view results
 
 ## Installation
-1. git clone git@bitbucket.org:Lubo13/citizen-meet-lawyer.git
+1. git clone git@github.com:lubo13/citizen-meet-lawyer.git
 2. cd citizen-meet-lawyer
 3. composer install
 4. edit .env file and change DATABASE_URL with your respective settings
